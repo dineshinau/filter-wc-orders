@@ -2,9 +2,9 @@
 Contributors: dineshinau
 Donate link: https://dineshinaublog.wordpress.com/donate-me
 Tags: woocommerce, filter, filter orders, wc order, filter wc order, payment gateway, gateway, gateway-based filter.
-Requires at least: 4.0
-Tested up to: 5.8
-Stable tag: 1.0.0
+Requires at least: 5.0.0
+Tested up to: 6.0.0
+Stable tag: 1.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -52,6 +52,9 @@ Admin and shop-managers can filter orders based on installed Payment Gateways an
  screenshot-1.png
 
 == Changelog ==
+
+= 1.0.1 (08-05-2022) =
+* Updated: Tested upto WordPress 6.0
 
 = 1.0 (24-07-2021) =
 This is the Initial Release of the plugin.
