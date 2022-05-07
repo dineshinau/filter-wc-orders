@@ -3,15 +3,17 @@
  * Plugin Name:       Filter WC Orders
  * Plugin URI:        https://dineshinaublog.wordpress.com/filter-wc-orders/
  * Description:       It helps in sorting woocommerce orders based on a payment gateway.
- * Version:           1.0.0
- * Requires at least: 5.0
- * Requires PHP:      7.0
+ * Version:           1.0.1
  * Author:            Dinesh Yadav
  * Author URI:        https://dineshinaublog.wordpress.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       filter-wc-orders
  * Domain Path:       /languages
+ *
+ * Requires at least: 5.0.0
+ * Tested up to: 6.0.0
+ * Requires PHP: 7.0
  *
  * @package filter-wc-orders
  */
@@ -58,7 +60,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * Defining constants.
 		 */
 		public function define_plugin_properties() {
-			define( 'DKFWCO_VERSION', '1.0.0' );
+			define( 'DKFWCO_VERSION', '1.0.1' );
 			define( 'DKFWCO_PLUGIN_FILE', __FILE__ );
 			define( 'DKFWCO_PLUGIN_DIR', __DIR__ );
 			define( 'DKFWCO_PLUGIN_SLUG', 'filter-wc-orders' );
