@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<ruleset name="QPS">
-    <description>Quick Plugin Switcher</description>
+<ruleset name="FWC">
+    <description>Filter WC Orders</description>
     <rule ref="WordPressVIPMinimum" />
 
     <!-- Configs -->
-    <config name="minimum_supported_wp_version" value="4.7" />
-    <config name="testVersion" value="5.7-" />
+    <config name="minimum_supported_wp_version" value="5.0" />
+    <config name="testVersion" value="6.3" />
     <config name="text_domain" value="quick-plugin-switcher"/>
 
     <rule ref="WordPress.Files.FileName.InvalidClassFileName">
