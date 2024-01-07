@@ -31,7 +31,9 @@ class DKFWCO_Admin {
 	 */
 	public function __construct() {
 		add_action( 'restrict_manage_posts', array( $this, 'filter_wc_orders' ), 11 );
+		add_action( 'woocommerce_order_list_table_restrict_manage_orders', array( $this, 'filter_wc_orders' ), 11 );
 		add_action( 'pre_get_posts', array( $this, 'filter_pre_get_post_query' ) );
+		add_filter( 'woocommerce_shop_order_list_table_prepare_items_query_args', array( $this, 'filter_wc_order_queries' ) );
 	}
 
 	/**
@@ -52,10 +54,12 @@ class DKFWCO_Admin {
 	 */
 	public function filter_wc_orders() {
 		global $typenow;
-		if ( 'shop_order' === $typenow ) {
+		$page_name = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+				
+		if ( 'shop_order' === $typenow || 'wc-orders' === $page_name ) {
 			// All gateway installed on the site.
 			$installed_gateways = WC()->payment_gateways->payment_gateways();
-			$selected_filter    = wc_clean( filter_input( INPUT_GET, 'dkfwco_filters', FILTER_SANITIZE_STRING ) );
+			$selected_filter    = wc_clean( filter_input( INPUT_GET, 'dkfwco_filters', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
 			$filter_value       = '';
 			if ( ! empty( $selected_filter ) ) {
 				$filter_arr   = explode( '_', $selected_filter );
@@ -88,12 +92,14 @@ class DKFWCO_Admin {
 	 */
 	public function filter_pre_get_post_query( $query ) {
 		global $pagenow;
-		$filter    = filter_input( INPUT_GET, 'dkfwco_filters', FILTER_SANITIZE_STRING );
-		$post_type = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_STRING );
+		$filter    = filter_input( INPUT_GET, 'dkfwco_filters', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$post_type = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$page_name = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		
-		if ( $query->is_admin && 'edit.php' === $pagenow && ! empty( $filter ) && 'shop_order' === $post_type ) {
+		if ( $query->is_main_query() && $query->is_admin && ( 'edit.php' === $pagenow || 'wc-orders' === $page_name || 'shop_order' === $post_type ) && ! empty( $filter ) ) {
 			$filter     = wc_clean( $filter );
 			$filter_arr = explode( '_', $filter );
+
 			if ( count( $filter_arr ) > 2 ) {
 				$filter_type  = $filter_arr[1];
 				$filter_value = $filter_arr[2];
@@ -116,5 +122,46 @@ class DKFWCO_Admin {
 				$query->set( 'meta_query', $meta_query ); // Set the new "meta query".
 			}
 		}
+	}
+
+	/**
+	 * Filter Order Queries.
+	 *
+	 * @param array $query_args Query.
+	 */
+	public function filter_wc_order_queries( $query_args ) {
+		$filter    = filter_input( INPUT_GET, 'dkfwco_filters', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$page_name = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+
+		if ( $this->dkfwco_is_hpos_enabled() && 'wc-orders' === $page_name && ! empty( $filter ) ) {
+			$filter     = wc_clean( $filter );
+			$filter_arr = explode( '_', $filter );
+
+			if ( count( $filter_arr ) > 2 ) {
+				$filter_type  = $filter_arr[1];
+				$filter_value = $filter_arr[2];
+			
+				if ( 'payment' === $filter_type ) {
+					$query_args['payment_method'] = $filter_value;
+				}
+
+				if ( 'users' === $filter_type ) {
+					if ( 'guest' === $filter_value ) {
+						$query_args['customer_id'] = 0;
+					}
+				}
+			}
+		}
+
+		return $query_args;
+	}
+
+	/**
+	 * Check WooCommerce HPOS is enabled.
+	 *
+	 * @return bool
+	 */
+	public function dkfwco_is_hpos_enabled() {
+		return ( class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' ) && method_exists( '\Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() );
 	}
 }
