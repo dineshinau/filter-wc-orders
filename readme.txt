@@ -53,6 +53,9 @@ Admin and shop-managers can filter orders based on installed Payment Gateways an
 
 == Changelog ==
 
+= 1.0.3 (12-01-2024) =
+* Updated: Coding strucuture according to phpcs-3.8.0
+
 = 1.0.2 (15-08-2023) =
 * Updated: Tested upto WordPress 6.3
 

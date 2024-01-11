@@ -9,7 +9,7 @@
  * Text Domain:       filter-wc-orders
  * Domain Path:       /languages
  * Requires at least: 5.0
- * Requires PHP:	  7.4
+ * Requires PHP:      7.4
  *
  * @package filter-wc-orders
  */
