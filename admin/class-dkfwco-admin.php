@@ -70,9 +70,13 @@ class DKFWCO_Admin {
 					<?php esc_html_e( 'No filter', 'filter-wc-orders' ); ?>
 				</option>
 				<optgroup label="<?php esc_attr_e( 'By Payment Method', 'filter-wc-orders' ); ?>">
-					<?php foreach ( $installed_gateways as $gateway_id => $gateway_obj ) : ?>
+					<?php
+					foreach ( $installed_gateways as $gateway_id => $gateway_obj ) :
+						$title = $gateway_obj->get_method_title();
+						$title = empty( $title ) ? $gateway_obj->get_title() : $title;
+						?>
 						<option value="dkfwco_payment_<?php echo esc_attr( $gateway_id ); ?>" <?php echo empty( $filter_value ) ? '' : selected( $gateway_id, $filter_value, false ); ?>>
-							<?php echo esc_html( $gateway_obj->get_method_title() ); ?>
+							<?php echo esc_html( $title ); ?>
 						</option>
 					<?php endforeach; ?>
 				</optgroup>
