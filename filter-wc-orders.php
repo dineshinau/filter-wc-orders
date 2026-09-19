@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name:       Filter WC Orders
- * Plugin URI:        https://dineshinaublog.wordpress.com/filter-wc-orders/
- * Description:       It helps in sorting woocommerce orders based on a payment gateway.
- * Version:           1.0.4
- * Author:            Dinesh Yadav
- * Author URI:        https://dineshinaublog.wordpress.com
- * Text Domain:       filter-wc-orders
- * Domain Path:       /languages
+ * Plugin Name: Filter WC Orders
+ * Plugin URI: https://dineshinaublog.wordpress.com/filter-wc-orders/
+ * Description: It helps in sorting woocommerce orders based on a payment gateway.
+ * Version: 1.0.4
+ * Author: Dinesh Yadav
+ * Author URI: https://dineshinaublog.wordpress.com
+ * Text Domain: filter-wc-orders
+ * Domain Path: /languages
  *
  * Requires at least: 6.5
  * Tested up to: 7.1
@@ -33,7 +33,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 *
 		 * @var DKFWCO_Core
 		 */
-		public static $_instance = null;
+		public static $inst = null;
 
 		/**
 		 *  Admin instance for this plugin.
@@ -111,23 +111,32 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * @return DKFWCO_Core|null
 		 */
 		public static function get_instance() {
-			if ( null === self::$_instance ) {
-				self::$_instance = new self();
+			if ( null === self::$inst ) {
+				self::$inst = new self();
 			}
 
-			return self::$_instance;
+			return self::$inst;
 		}
 	}
 }
 
 if ( ! function_exists( 'dkwc_log' ) ) {
+	/**
+	 * Logging function for the plugin.
+	 *
+	 * @param string $message Message to log.
+	 * @param string $level Log level.
+	 * @param array  $context Context for the log.
+	 *
+	 * @return void
+	 */
 	function dkwc_log( $message, $level, $context = array() ) {
 		$source            = ( is_array( $context ) && ! empty( $context['source'] ) ) ? $context['source'] : 'dkwc';
 		$context['source'] = $source;
 		$logger            = wc_get_logger();
 		$current_user_id   = get_current_user_id();
 
-		$in_action = wp_sprintf( ( /* translators: %s current user id */ esc_html__( 'User in action: %s: ', 'dkwc' ) ), $current_user_id );
+		$in_action = wp_sprintf( ( /* translators: %s current user id */ esc_html__( 'User in action: %s: ', 'filter-wc-orders' ) ), $current_user_id );
 		$message   = $in_action . $message;
 
 		$logger->log( $level, $message, $context );
