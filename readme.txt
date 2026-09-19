@@ -1,12 +1,12 @@
 === Filter WC Orders ===
 Contributors: dineshinau
 Donate link: https://dineshinaublog.wordpress.com/donate-me
-Tags: woocommerce, filter, filter orders, wc order, filter wc order, payment gateway, gateway, gateway-based filter.
-Requires at least: 5.0
-Tested up to: 6.3
-Stable tag: 1.0.2
-Requires PHP: 7.3
-License: GPLv2 or later
+Tags: woocommerce order filter, filter orders, filter wc order, payment gateway, gateway-based filter.
+Requires at least: 6.5
+Tested up to: 7.1
+Stable tag: 1.0.4
+Requires PHP: 7.4
+License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Filter WC Orders adds a new filter dropdown on the admin order screen.
@@ -26,10 +26,9 @@ Orders can be filtered also by Guest users and shop customers
 = Connect with me =
 
 * **Website** - https://dineshinaublog.wordpress.com/
-* **Facebook** - https://www.facebook.com/dineshinau/
-* **Twitter** - https://twitter.com/dineshinau/
 * **LinkedIn** - https://www.linkedin.com/in/dineshinau/
-
+* **Facebook** - https://www.facebook.com/dineshinau/
+* **X** - https://x.com/dineshinau/
 
 == Installation ==
 
@@ -52,6 +51,8 @@ Admin and shop-managers can filter orders based on installed Payment Gateways an
  screenshot-1.png
 
 == Changelog ==
+= 1.0.4 (20-09-2026) =
+* Updated: Coding strucuture according to phpcs-3.8.0
 
 = 1.0.3 (12-01-2024) =
 * Updated: Coding strucuture according to phpcs-3.8.0
