@@ -3,13 +3,18 @@
  * Plugin Name:       Filter WC Orders
  * Plugin URI:        https://dineshinaublog.wordpress.com/filter-wc-orders/
  * Description:       It helps in sorting woocommerce orders based on a payment gateway.
- * Version:           1.0.3
+ * Version:           1.0.4
  * Author:            Dinesh Yadav
  * Author URI:        https://dineshinaublog.wordpress.com
  * Text Domain:       filter-wc-orders
  * Domain Path:       /languages
- * Requires at least: 5.0
- * Requires PHP:      7.4
+ *
+ * Requires at least: 6.5
+ * Tested up to: 7.1
+ * Requires PHP: 7.4
+ *
+ * License: GPLv3
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * @package filter-wc-orders
  */
@@ -28,7 +33,14 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 *
 		 * @var DKFWCO_Core
 		 */
-		public static $instance = null;
+		public static $_instance = null;
+
+		/**
+		 *  Admin instance for this plugin.
+		 *
+		 * @var DKFWCO_Admin
+		 */
+		public $admin;
 
 		/**
 		 * DKFWCO_Core constructor.
@@ -49,7 +61,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * Defining constants.
 		 */
 		public function define_plugin_properties() {
-			define( 'DKFWCO_VERSION', '1.0.3' );
+			define( 'DKFWCO_VERSION', '1.0.4' );
 			define( 'DKFWCO_PLUGIN_FILE', __FILE__ );
 			define( 'DKFWCO_PLUGIN_DIR', __DIR__ );
 			define( 'DKFWCO_PLUGIN_SLUG', 'filter-wc-orders' );
@@ -90,7 +102,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 			 * Loads the Admin file.
 			 */
 			require __DIR__ . '/admin/class-dkfwco-admin.php';
-			DKFWCO_Admin::get_instance();
+			$this->admin = DKFWCO_Admin::get_instance();
 		}
 
 		/**
@@ -99,12 +111,38 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * @return DKFWCO_Core|null
 		 */
 		public static function get_instance() {
-			if ( null === self::$instance ) {
-				self::$instance = new self();
+			if ( null === self::$_instance ) {
+				self::$_instance = new self();
 			}
 
-			return self::$instance;
+			return self::$_instance;
 		}
 	}
-	DKFWCO_Core::get_instance();
 }
+
+if ( ! function_exists( 'dkwc_log' ) ) {
+	function dkwc_log( $message, $level, $context = array() ) {
+		$source            = ( is_array( $context ) && ! empty( $context['source'] ) ) ? $context['source'] : 'dkwc';
+		$context['source'] = $source;
+		$logger            = wc_get_logger();
+		$current_user_id   = get_current_user_id();
+
+		$in_action = wp_sprintf( ( /* translators: %s current user id */ esc_html__( 'User in action: %s: ', 'dkwc' ) ), $current_user_id );
+		$message   = $in_action . $message;
+
+		$logger->log( $level, $message, $context );
+	}
+}
+
+if ( ! function_exists( 'dkfwco_core' ) ) {
+	/**
+	 * Returning Filter Order Core class.
+	 *
+	 * @return DKFWCO_Core
+	 */
+	function dkfwco_core() {
+		return DKFWCO_Core::get_instance();
+	}
+}
+
+dkfwco_core();

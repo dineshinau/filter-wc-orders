@@ -55,7 +55,7 @@ class DKFWCO_Admin {
 	public function filter_wc_orders() {
 		global $typenow;
 		$page_name = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-				
+
 		if ( 'shop_order' === $typenow || 'wc-orders' === $page_name ) {
 			// All gateway installed on the site.
 			$installed_gateways = WC()->payment_gateways->payment_gateways();
@@ -70,9 +70,13 @@ class DKFWCO_Admin {
 					<?php esc_html_e( 'No filter', 'filter-wc-orders' ); ?>
 				</option>
 				<optgroup label="<?php esc_attr_e( 'By Payment Method', 'filter-wc-orders' ); ?>">
-					<?php foreach ( $installed_gateways as $gateway_id => $gateway_obj ) : ?>
+					<?php
+					foreach ( $installed_gateways as $gateway_id => $gateway_obj ) :
+						$title = $gateway_obj->get_method_title();
+						$title = empty( $title ) ? $gateway_obj->get_title() : $title;
+						?>
 						<option value="dkfwco_payment_<?php echo esc_attr( $gateway_id ); ?>" <?php echo empty( $filter_value ) ? '' : selected( $gateway_id, $filter_value, false ); ?>>
-							<?php echo esc_html( $gateway_obj->get_method_title() ); ?>
+							<?php echo esc_html( $title ); ?>
 						</option>
 					<?php endforeach; ?>
 				</optgroup>
@@ -95,7 +99,7 @@ class DKFWCO_Admin {
 		$filter    = filter_input( INPUT_GET, 'dkfwco_filters', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$post_type = filter_input( INPUT_GET, 'post_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$page_name = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		
+
 		if ( $query->is_main_query() && $query->is_admin && ( 'edit.php' === $pagenow || 'wc-orders' === $page_name || 'shop_order' === $post_type ) && ! empty( $filter ) ) {
 			$filter     = wc_clean( $filter );
 			$filter_arr = explode( '_', $filter );
@@ -140,7 +144,7 @@ class DKFWCO_Admin {
 			if ( count( $filter_arr ) > 2 ) {
 				$filter_type  = $filter_arr[1];
 				$filter_value = $filter_arr[2];
-			
+
 				if ( 'payment' === $filter_type ) {
 					$query_args['payment_method'] = $filter_value;
 				}
