@@ -9,6 +9,90 @@ Filter WC Orders adds a filter dropdown to the WooCommerce orders screen in the 
 - PHP 7.4 or later
 - WooCommerce orders managed through either the standard order screen or High-Performance Order Storage (HPOS)
 
+## Development Setup
+
+### Install dependencies
+
+From the plugin directory, install the PHP development dependencies and the npm development dependencies:
+
+```bash
+composer install
+npm install
+```
+
+The Composer dependencies provide PHP_CodeSniffer, WordPress Coding Standards, WooCommerce Coding Standards, and PHP compatibility checks. The npm dependencies provide ESLint, Stylelint, Prettier integrations, and the packaging helpers used by this project.
+
+The package also includes these equivalent npm scripts:
+
+```bash
+npm run composer_install
+npm run npm_install
+```
+
+`npm run npm_install` removes `package-lock.json` before installing packages and is intended for refreshing the repository's npm dependency state. Use `npm install` when you want to preserve the existing lockfile.
+
+### Code quality commands
+
+PHP files are checked with the rules in `phpcs.xml`. The configured rules include WordPress Core, WordPress Extra, WordPress Docs, WooCommerce, PHPCompatibility, internationalization, security, naming, and file-format checks.
+
+Run the configured PHP_CodeSniffer command with:
+
+```bash
+npm run phpcs
+```
+
+The script writes an XML report to `phpcs-results/`. It expects the repository's shared Composer installation to be available through the `VAR` environment variable and `$VAR/.config/composer/vendor/`. For example, when that shared installation is in `/home/developer`:
+
+```bash
+VAR=/home/developer npm run phpcs
+```
+
+To automatically apply fixes supported by PHP_CodeSniffer, run:
+
+```bash
+VAR=/home/developer npm run phpcbf
+```
+
+There are no project-specific JavaScript or CSS source files at present, but the repository retains ESLint and Stylelint configuration for future assets. The JavaScript rules extend `eslint-config-wordpress`, and the CSS rules extend `stylelint-config-wordpress` with ordered properties.
+
+### Build a plugin ZIP
+
+After installing dependencies and ensuring the WordPress CLI (`wp`) is available, create a distributable archive with:
+
+```bash
+npm run zip
+```
+
+This command regenerates `languages/filter-wc-orders.pot`, copies the plugin files into a temporary `filter-wc-orders` directory, creates `filter-wc-orders.zip`, and removes the temporary directory. The archive includes the admin code, translations, `index.php`, `readme.txt`, and the main plugin file.
+
+### Project structure
+
+```text
+filter-wc-orders/
+|- admin/
+|  `- class-dkfwco-admin.php  # Admin dropdown and order-query filters
+|- languages/
+|  `- filter-wc-orders.pot    # Translation template
+|- filter-wc-orders.php        # Plugin bootstrap and shared constants
+|- index.php                   # Prevents directory listing access
+|- readme.txt                  # WordPress.org plugin readme
+|- README.md                   # Project and developer documentation
+|- composer.json               # PHP development dependencies
+|- package.json                # npm scripts and frontend tooling
+`- phpcs.xml                   # PHP coding-standard rules
+```
+
+## How It Works
+
+The main plugin file loads the text domain, defines plugin constants, and initializes the admin class after WordPress loads. The admin class:
+
+1. Adds the filter dropdown to the traditional WooCommerce order list and the HPOS order list.
+2. Populates payment-method choices from the payment gateways registered by WooCommerce.
+3. Adds a query condition for payment methods or customer types when a filter is selected.
+4. Uses the legacy post query for traditional orders and WooCommerce order-list query arguments when HPOS is enabled.
+
+The plugin does not create a settings page or store additional plugin options. Filtering is performed using the existing WooCommerce order data.
+
 ## Features
 
 ### Filter by payment gateway
