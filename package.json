@@ -1,9 +1,16 @@
 {
-	"name": "linter-sniffer-pretty-printer",
-	"version": "1.0.0",
+	"name": "filter-wc-orders",
+	"version": "1.0.4",
 	"description": "Sniffer, Linter, Pretty Printer for WordPress Projects",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"update": "npx npm-check-updates -u",
+		"composer_update": "composer update",
+		"composer_install": "composer install",
+        "npm_install": "rm -rf package-lock.json && npm i --force",
+		"phpcbf": "cd $VAR && $PWD/.config/composer/vendor/squizlabs/php_codesniffer/bin/phpcbf --standard=$INIT_CWD/phpcs.xml --severity=1 --ignore-annotations --extensions=php,html $INIT_CWD/",
+        "phpcs": "mkdir -p phpcs-results && cd $VAR && $PWD/.config/composer/vendor/squizlabs/php_codesniffer/bin/phpcs --standard=$INIT_CWD/phpcs.xml --severity=1 --report-source --report-xml=$INIT_CWD/phpcs-results/report-$(date \"+%Y-%m-%dT%H:%M:%S\").xml --ignore-annotations --extensions=php,html $INIT_CWD/",
+        "make-pot": "php -d xdebug.max_nesting_level=512 $(which wp) i18n make-pot --exclude=\"node_modules/,languages/,.gitignore,.gitmodules,.gulpfile.js,.git,.webpack.config.js,package,json,package-lock.json,phpcs.xml,phpmd.xml,license.txt,readme.txt,assets/\" --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/dineshinau/quick-plugin-switcher/issues/\", \"language-team\":\"LANGUAGE <EMAIL@ADDRESS>\"}' . languages/filter-wc-orders.pot",
+        "zip": "rm -f $npm_package_name.zip && npm run make-pot && mkdir -p $npm_package_name && cp -r admin/ languages/ index.php readme.txt $npm_package_name.php $npm_package_name && zip -r $npm_package_name.zip $npm_package_name && rm -r $npm_package_name"
 	},
 	"repository": {
 		"type": "git",
@@ -16,14 +23,14 @@
 	},
 	"homepage": "https://github.com/christophherr/linter-sniffer-pretty-printer#readme",
 	"devDependencies": {
-		"eslint": "^8.56.0",
+		"eslint": "^10.11.0",
 		"eslint-config-wordpress": "^2.0.0",
-		"prettier": "^3.1.1",
-		"prettier-eslint": "^16.2.0",
+		"prettier": "^3.9.8",
+		"prettier-eslint": "^17.1.2",
 		"prettier-stylelint": "^0.4.2",
-		"stylelint": "^16.1.0",
-		"stylelint-config-wordpress": "^13.0.0",
-		"stylelint-order": "^6.0.4"
+		"stylelint": "^17.15.0",
+		"stylelint-config-wordpress": "^17.0.0",
+		"stylelint-order": "^8.1.1"
 	},
 	"browserslist": [
 		"> 1%",
