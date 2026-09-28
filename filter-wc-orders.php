@@ -13,6 +13,8 @@
  * Tested up to: 7.1
  * Requires PHP: 7.4
  *
+ * Requires Plugins: woocommerce
+ *
  * License: GPLv3
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
