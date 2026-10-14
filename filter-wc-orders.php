@@ -3,20 +3,32 @@
  * Plugin Name: Filter WC Orders
  * Plugin URI: https://dineshinaublog.wordpress.com/filter-wc-orders/
  * Description: It helps in sorting woocommerce orders based on a payment gateway.
- * Version: 1.0.4
+ * Version: 1.1.0
  * Author: Dinesh Yadav
- * Author URI: https://dineshinaublog.wordpress.com
+ * Author URI: https://github.com/dineshinau
  * Text Domain: filter-wc-orders
  * Domain Path: /languages
+ * License: GPL v3 or later
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Requires at least: 6.5
- * Tested up to: 7.1
  * Requires PHP: 7.4
- *
+ * WC requires at least: 7.0
+ * WC tested up to: 11.2
  * Requires Plugins: woocommerce
  *
- * License: GPLv3
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Filter WC Orders is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Filter WC Orders is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Bulk COGS Editor for WooCommerce. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package filter-wc-orders
  */
@@ -63,7 +75,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * Defining constants.
 		 */
 		public function define_plugin_properties() {
-			define( 'DKFWCO_VERSION', '1.0.4' );
+			define( 'DKFWCO_VERSION', '1.1.0' );
 			define( 'DKFWCO_PLUGIN_FILE', __FILE__ );
 			define( 'DKFWCO_PLUGIN_DIR', __DIR__ );
 			define( 'DKFWCO_PLUGIN_SLUG', 'filter-wc-orders' );
@@ -82,18 +94,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * Loading hooks.
 		 */
 		public function load_hooks() {
-			/**
-			 * Initialize Localization.
-			 */
-			add_action( 'init', array( $this, 'localization' ) );
 			add_action( 'plugins_loaded', array( $this, 'load_classes' ), 1 );
-		}
-
-		/**
-		 * Localizing the plugin text strings.
-		 */
-		public function localization() {
-			load_plugin_textdomain( 'filter-wc-orders', false, __DIR__ . '/languages/' );
 		}
 
 		/**

@@ -1,10 +1,9 @@
 === Filter WC Orders ===
 Contributors: dineshinau
-Donate link: https://dineshinaublog.wordpress.com/donate-me
 Tags: woocommerce order filter, filter orders, filter wc order, payment gateway, gateway-based filter.
 Requires at least: 6.5
 Tested up to: 7.1
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -23,12 +22,13 @@ Admin can view all orders processed through a specific payment gateway (Screensh
 2. **User Type Based Filters**
 Orders can be filtered also by Guest users and shop customers
 
-= Connect with me =
+= Connect with the developer =
 
-* **Website** - https://dineshinaublog.wordpress.com/
-* **LinkedIn** - https://www.linkedin.com/in/dineshinau/
-* **Facebook** - https://www.facebook.com/dineshinau/
-* **X** - https://x.com/dineshinau/
+* [Website](https://dineshinaublog.wordpress.com/)
+* [Facebook](https://www.facebook.com/dineshinau/)
+* [X](https://x.com/dineshinau/)
+* [LinkedIn](https://www.linkedin.com/in/dineshinau/)
+* [GitHub](https://github.com/dineshinau/)
 
 == Installation ==
 
@@ -51,17 +51,12 @@ Admin and shop-managers can filter orders based on installed Payment Gateways an
  screenshot-1.png
 
 == Changelog ==
-= 1.0.4 (20-09-2026) =
+= 1.1.0 (14-10-2026) =
+* Added: Feature to filter orders based on payment gateways and user types
 * Improved: Payment method filters now fall back to the gateway title when the method title is empty.
 * Updated: Plugin metadata and WordPress compatibility requirements.
 * Refactored: Core structure and user action logging.
 * Updated: Coding structure according to phpcs-4.0
-
-= 1.0.3 (12-01-2024) =
-* Updated: Coding structure according to phpcs-3.8.0
-
-= 1.0.2 (15-08-2023) =
-* Updated: Tested upto WordPress 6.3
 
 = 1.0.1 (08-05-2022) =
 * Updated: Tested upto WordPress 6.0
