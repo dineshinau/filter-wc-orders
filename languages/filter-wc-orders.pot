@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-14T15:04:14+00:00\n"
+"POT-Creation-Date: 2026-10-14T15:11:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "language-team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -61,7 +61,7 @@ msgid "Logged in Users"
 msgstr ""
 
 #. translators: %s current user id
-#: filter-wc-orders.php:142
+#: filter-wc-orders.php:157
 #, php-format
-msgid "User in action: %s: "
+msgid "Done by user ID: %s"
 msgstr ""

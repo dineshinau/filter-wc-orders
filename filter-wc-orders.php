@@ -80,6 +80,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 			define( 'DKFWCO_PLUGIN_DIR', __DIR__ );
 			define( 'DKFWCO_PLUGIN_SLUG', 'filter-wc-orders' );
 			add_action( 'plugins_loaded', array( $this, 'load_wp_dependent_properties' ), 1 );
+			add_action( 'before_woocommerce_init', array( $this, 'declare_hpos_compatibility' ) );
 		}
 
 		/**
@@ -109,6 +110,22 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		}
 
 		/**
+		 * Declare compatibility with WooCommerce HPOS (High-Performance Order Storage).
+		 *
+		 * @return void
+		 */
+		public function declare_hpos_compatibility(): void {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+					'custom_order_tables',
+					DKFWCO_PLUGIN_FILE,
+					true
+				);
+			}
+		}
+
+
+		/**
 		 * Function to provide instance of this class.
 		 *
 		 * @return DKFWCO_Core|null
@@ -123,26 +140,26 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 	}
 }
 
-if ( ! function_exists( 'dkwc_log' ) ) {
+if ( ! function_exists( 'dkfwco_log' ) ) {
 	/**
 	 * Logging function for the plugin.
 	 *
 	 * @param string $message Message to log.
-	 * @param string $level Log level.
-	 * @param array  $context Context for the log.
 	 *
 	 * @return void
 	 */
-	function dkwc_log( $message, $level, $context = array() ) {
-		$source            = ( is_array( $context ) && ! empty( $context['source'] ) ) ? $context['source'] : 'dkwc';
-		$context['source'] = $source;
-		$logger            = wc_get_logger();
-		$current_user_id   = get_current_user_id();
+	function dkfwco_log( $message ) {
+		if ( function_exists( 'wc_get_logger' ) ) {
+			$log_enabled = apply_filters( 'dkfwco_is_log_enabled', true );
 
-		$in_action = wp_sprintf( ( /* translators: %s current user id */ esc_html__( 'User in action: %s: ', 'filter-wc-orders' ) ), $current_user_id );
-		$message   = $in_action . $message;
+			if ( $log_enabled ) {
+				$logger  = wc_get_logger();
+				$done_by = wp_sprintf( ( /* translators: %s current user id */ esc_html__( 'Done by user ID: %s', 'filter-wc-orders' ) ), get_current_user_id() );
+				$message = $done_by . ' -> ' . $message;
 
-		$logger->log( $level, $message, $context );
+				$logger->log( 'info', $message, array( 'source' => 'dkfwco' ) );
+			}
+		}
 	}
 }
 
