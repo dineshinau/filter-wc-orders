@@ -3,18 +3,32 @@
  * Plugin Name: Filter WC Orders
  * Plugin URI: https://dineshinaublog.wordpress.com/filter-wc-orders/
  * Description: It helps in sorting woocommerce orders based on a payment gateway.
- * Version: 1.0.4
+ * Version: 1.1.0
  * Author: Dinesh Yadav
- * Author URI: https://dineshinaublog.wordpress.com
+ * Author URI: https://github.com/dineshinau
  * Text Domain: filter-wc-orders
  * Domain Path: /languages
+ * License: GPL v3 or later
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  *
  * Requires at least: 6.5
- * Tested up to: 7.1
  * Requires PHP: 7.4
+ * WC requires at least: 7.0
+ * WC tested up to: 11.2
+ * Requires Plugins: woocommerce
  *
- * License: GPLv3
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Filter WC Orders is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Filter WC Orders is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Bulk COGS Editor for WooCommerce. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package filter-wc-orders
  */
@@ -61,11 +75,12 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * Defining constants.
 		 */
 		public function define_plugin_properties() {
-			define( 'DKFWCO_VERSION', '1.0.4' );
+			define( 'DKFWCO_VERSION', '1.1.0' );
 			define( 'DKFWCO_PLUGIN_FILE', __FILE__ );
 			define( 'DKFWCO_PLUGIN_DIR', __DIR__ );
 			define( 'DKFWCO_PLUGIN_SLUG', 'filter-wc-orders' );
 			add_action( 'plugins_loaded', array( $this, 'load_wp_dependent_properties' ), 1 );
+			add_action( 'before_woocommerce_init', array( $this, 'declare_hpos_compatibility' ) );
 		}
 
 		/**
@@ -80,18 +95,7 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 		 * Loading hooks.
 		 */
 		public function load_hooks() {
-			/**
-			 * Initialize Localization.
-			 */
-			add_action( 'init', array( $this, 'localization' ) );
 			add_action( 'plugins_loaded', array( $this, 'load_classes' ), 1 );
-		}
-
-		/**
-		 * Localizing the plugin text strings.
-		 */
-		public function localization() {
-			load_plugin_textdomain( 'filter-wc-orders', false, __DIR__ . '/languages/' );
 		}
 
 		/**
@@ -104,6 +108,22 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 			require __DIR__ . '/admin/class-dkfwco-admin.php';
 			$this->admin = DKFWCO_Admin::get_instance();
 		}
+
+		/**
+		 * Declare compatibility with WooCommerce HPOS (High-Performance Order Storage).
+		 *
+		 * @return void
+		 */
+		public function declare_hpos_compatibility(): void {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+					'custom_order_tables',
+					DKFWCO_PLUGIN_FILE,
+					true
+				);
+			}
+		}
+
 
 		/**
 		 * Function to provide instance of this class.
@@ -120,26 +140,26 @@ if ( ! class_exists( 'DKFWCO_Core' ) ) {
 	}
 }
 
-if ( ! function_exists( 'dkwc_log' ) ) {
+if ( ! function_exists( 'dkfwco_log' ) ) {
 	/**
 	 * Logging function for the plugin.
 	 *
 	 * @param string $message Message to log.
-	 * @param string $level Log level.
-	 * @param array  $context Context for the log.
 	 *
 	 * @return void
 	 */
-	function dkwc_log( $message, $level, $context = array() ) {
-		$source            = ( is_array( $context ) && ! empty( $context['source'] ) ) ? $context['source'] : 'dkwc';
-		$context['source'] = $source;
-		$logger            = wc_get_logger();
-		$current_user_id   = get_current_user_id();
+	function dkfwco_log( $message ) {
+		if ( function_exists( 'wc_get_logger' ) ) {
+			$log_enabled = apply_filters( 'dkfwco_is_log_enabled', true );
 
-		$in_action = wp_sprintf( ( /* translators: %s current user id */ esc_html__( 'User in action: %s: ', 'filter-wc-orders' ) ), $current_user_id );
-		$message   = $in_action . $message;
+			if ( $log_enabled ) {
+				$logger  = wc_get_logger();
+				$done_by = wp_sprintf( ( /* translators: %s current user id */ esc_html__( 'Done by user ID: %s', 'filter-wc-orders' ) ), get_current_user_id() );
+				$message = $done_by . ' -> ' . $message;
 
-		$logger->log( $level, $message, $context );
+				$logger->log( 'info', $message, array( 'source' => 'dkfwco' ) );
+			}
+		}
 	}
 }
 
