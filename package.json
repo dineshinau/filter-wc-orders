@@ -1,7 +1,6 @@
 {
 	"name": "filter-wc-orders",
 	"version": "1.1.0",
-	"description": "Sniffer, Linter, Pretty Printer for WordPress Projects",
 	"scripts": {
 		"update": "npx npm-check-updates -u",
 		"composer_update": "composer update",
@@ -12,18 +11,8 @@
         "make-pot": "php -d xdebug.max_nesting_level=512 $(which wp) i18n make-pot --exclude=\"node_modules/,languages/,.gitignore,.gitmodules,.gulpfile.js,.git,.webpack.config.js,package,json,package-lock.json,phpcs.xml,phpmd.xml,license.txt,readme.txt,assets/\" --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/dineshinau/quick-plugin-switcher/issues/\", \"language-team\":\"LANGUAGE <EMAIL@ADDRESS>\"}' . languages/filter-wc-orders.pot",
         "zip": "rm -f $npm_package_name.zip && npm run make-pot && mkdir -p $npm_package_name && cp -r admin/ languages/ index.php readme.txt $npm_package_name.php $npm_package_name && zip -r $npm_package_name.zip $npm_package_name && rm -r $npm_package_name"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/christophherr/linter-sniffer-pretty-printer.git"
-	},
-	"author": "Christoph Herr",
-	"license": "GPL-2.0-or-later",
-	"bugs": {
-		"url": "https://github.com/christophherr/linter-sniffer-pretty-printer/issues"
-	},
-	"homepage": "https://github.com/christophherr/linter-sniffer-pretty-printer#readme",
 	"devDependencies": {
-		"eslint": "^10.12.0",
+		"eslint": "^10.13.0",
 		"eslint-config-wordpress": "^2.0.0",
 		"prettier": "^3.9.10",
 		"prettier-eslint": "^17.1.2",
